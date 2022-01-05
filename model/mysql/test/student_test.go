@@ -11,6 +11,7 @@ import (
 var once sync.Once
 
 func oneTestSoup(t *testing.T) {
+	conf.ConfigRegister("../../../app.ini")
 	once.Do(func() {
 		if err := mysql.InitDB(); err != nil {
 			t.Error("get mysql instance failed")
@@ -18,9 +19,7 @@ func oneTestSoup(t *testing.T) {
 	})
 }
 func Test_GetStudentInfoByID(t *testing.T) {
-	//oneTestSoup(t)
-	conf.ConfigRegister("../../../app.ini")
-	t.Logf("%+v", conf.MysqlConf)
+	oneTestSoup(t)
 	if err := mysql.InitDB(); err != nil {
 		t.Error(err)
 	}

@@ -46,11 +46,11 @@ func ConfigRegister(file string) {
 		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
 	}
 
-	if err := cfg.Section("mysql").MapTo(ServerConf); err != nil {
+	if err := cfg.Section("mysql").MapTo(MysqlConf); err != nil {
 		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
 	}
 
-	if err := cfg.Section("redis").MapTo(ServerConf); err != nil {
+	if err := cfg.Section("redis").MapTo(RedisConf); err != nil {
 		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
 	}
 }
