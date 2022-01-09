@@ -26,8 +26,8 @@ type Mysql struct {
 type Redis struct {
 	Host        string
 	Password    string
-	MaxIdle     int
-	MaxActive   int
+	MaxRetries  int
+	DialTimeout int
 	IdleTimeout int
 }
 
