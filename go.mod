@@ -3,10 +3,10 @@ module smart-server
 go 1.17
 
 require (
-	github.com/go-sql-driver/mysql v1.5.0
-	github.com/jinzhu/gorm v1.9.16
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/kataras/iris/v12 v12.2.0-alpha5.0.20211209124403-d6cfe3fe5ba4
 	gopkg.in/ini.v1 v1.66.2
+	gorm.io/driver/mysql v1.2.2
 	gorm.io/gorm v1.22.4
 )
 

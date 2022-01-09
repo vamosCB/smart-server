@@ -2,11 +2,12 @@ package mysql
 
 import (
 	"fmt"
-	"smart-server/conf"
+	"smart-server/model/conf"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 var DB *gorm.DB
@@ -21,17 +22,17 @@ type BaseColumn struct {
 // InitDB 初始化mysql数据库
 func InitDB() error {
 	var err error
-	DB, err = gorm.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		conf.MysqlConf.User,
-		conf.MysqlConf.Password,
-		conf.MysqlConf.Host,
-		conf.MysqlConf.Name))
+	DB, err = gorm.Open(mysql.Open(conf.MysqlConf.Dsn()), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `user`
+		},
+	})
 
 	if err != nil {
 		return fmt.Errorf("models.Setup err: %v", err)
 	}
-	DB.SingularTable(true)
-	DB.DB().SetMaxIdleConns(10)
-	DB.DB().SetMaxOpenConns(100)
+	sqlDB, _ := DB.DB()
+	sqlDB.SetMaxIdleConns(10)  //用于设置连接池中空闲连接的最大数量
+	sqlDB.SetMaxOpenConns(100) //设置打开数据库连接的最大数量
 	return nil
 }

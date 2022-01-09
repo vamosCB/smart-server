@@ -1,7 +1,7 @@
 package conf
 
 import (
-	"log"
+	"fmt"
 
 	"gopkg.in/ini.v1"
 )
@@ -35,22 +35,32 @@ var RedisConf = &Redis{}
 var ServerConf = &Server{}
 var MysqlConf = &Mysql{}
 
-// ConfigRegister 解析文件，注册配置
-func ConfigRegister(file string) {
+// InitConfig 解析文件，注册配置
+func InitConfig(file string) error {
 	cfg, err := ini.Load(file)
 	if err != nil {
-		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
+		return err
 	}
 
 	if err := cfg.Section("server").MapTo(ServerConf); err != nil {
-		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
+		return err
 	}
 
 	if err := cfg.Section("mysql").MapTo(MysqlConf); err != nil {
-		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
+		return err
 	}
 
 	if err := cfg.Section("redis").MapTo(RedisConf); err != nil {
-		log.Fatalf("setting.Setup, fail to parse app.ini: %v", err)
+		return err
 	}
+	return nil
+}
+
+// Dsn 返回mysql连接串
+func (mysql *Mysql) Dsn() string {
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		mysql.User,
+		mysql.Password,
+		mysql.Host,
+		mysql.Name)
 }
